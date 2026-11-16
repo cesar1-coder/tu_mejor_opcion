@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Mejor Opción | Soluciones Modernas y Digitales</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Librería QRCode.js para generación instantánea en el cliente -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <!-- Lucide Icons para iconos limpios y modernos -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Configuración personalizada de Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        pastelBlue: '#E0F2FE',
+                        pastelSoft: '#D8EAFE',
+                        deepNavy: '#0F172A',
+                        oceanBlue: '#0284C7',
+                        mintAccent: '#10B981',
+                        coralAccent: '#F43F5E',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos base y fondo degradado azul pastel */
+        body {
+            background: linear-gradient(135deg, #E0F2FE 0%, #D8EAFE 50%, #E0F2FE 100%);
+            color: #0F172A;
+            overflow-x: hidden;
+        }
+
+        /* Efecto Glassmorphism refinado */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 20px 40px -15px rgba(2, 132, 199, 0.12);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        /* Contenedor del QR generado */
+        #qrcode img, #qrcode canvas {
+            margin: 0 auto;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-oceanBlue selection:text-white">
+
+    <!-- Elementos decorativos de fondo (Orbes difuminados) -->
+    <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-sky-300/40 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/3 -right-24 w-[28rem] h-[28rem] bg-emerald-200/40 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-1/4 w-96 h-96 bg-rose-200/30 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- 1. BARRA DE NAVEGACIÓN LIMPIA Y MODERNA -->
+    <header class="sticky top-0 z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-oceanBlue to-mintAccent flex items-center justify-center text-white shadow-lg shadow-sky-500/25 group-hover:scale-105 transition-transform">
+                        <i data-lucide="sparkles" class="w-6 h-6"></i>
+                    </div>
+                    <span class="font-display font-extrabold text-xl sm:text-2xl tracking-tight text-deepNavy">
+                        Tu Mejor <span class="text-oceanBlue">Opción</span>
+                    </span>
+                </a>
+
+                <!-- Enlaces Desktop -->
+                <nav class="hidden md:flex items-center gap-8 font-medium text-slate-700">
+                    <a href="#inicio" class="hover:text-oceanBlue transition-colors">Inicio</a>
+                    <a href="#beneficios" class="hover:text-oceanBlue transition-colors">Beneficios</a>
+                    <a href="#generador-qr" class="hover:text-oceanBlue transition-colors flex items-center gap-1.5">
+                        <span>Generador QR</span>
+                        <span class="px-2 py-0.5 text-xs font-semibold bg-mintAccent/15 text-emerald-700 rounded-full">Gratis</span>
+                    </a>
+                    <a href="#contacto" class="hover:text-oceanBlue transition-colors">Contacto</a>
+                </nav>
+
+                <!-- Botón CTA Desktop & Menú Móvil -->
+                <div class="flex items-center gap-3">
+                    <a href="#generador-qr" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-deepNavy text-white font-semibold text-sm hover:bg-oceanBlue transition-all shadow-md hover:shadow-lg active:scale-95">
+                        <i data-lucide="qr-code" class="w-4 h-4"></i>
+                        Crear mi QR
+                    </a>
+                    <button id="mobile-menu-btn" aria-label="Abrir menú" class="md:hidden p-2.5 rounded-xl bg-white/80 text-deepNavy hover:bg-white transition-colors">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú desplegable Móvil -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-xl border-b border-sky-100 px-4 pt-2 pb-6 space-y-2">
+            <a href="#inicio" class="block px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sky-50 hover:text-oceanBlue">Inicio</a>
+            <a href="#beneficios" class="block px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sky-50 hover:text-oceanBlue">Beneficios</a>
+            <a href="#generador-qr" class="block px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sky-50 hover:text-oceanBlue">Generador QR Interactivo</a>
+            <a href="#contacto" class="block px-4 py-3 rounded-xl font-medium text-slate-700 hover:bg-sky-50 hover:text-oceanBlue">Contacto Rápido</a>
+        </div>
+    </header>
+
+    <!-- 2. SECCIÓN HERO CON GLASSMORPHISM -->
+    <section id="inicio" class="pt-12 pb-20 lg:pt-20 lg:pb-28">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Columna izquierda: Textos persuasivos y botones -->
+                <div class="lg:col-span-7 space-y-7 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 border border-white shadow-sm text-sm font-semibold text-oceanBlue">
+                        <span class="w-2.5 h-2.5 rounded-full bg-coralAccent animate-pulse"></span>
+                        Innovación, confianza y conexión instantánea
+                    </div>
+
+                    <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight text-deepNavy leading-[1.12]">
+                        Descubre por qué somos <span class="text-transparent bg-clip-text bg-gradient-to-r from-oceanBlue via-sky-500 to-mintAccent">Tu Mejor Opción</span> digital
+                    </h1>
+
+                    <p class="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                        Impulsa tu marca, conecta con tus clientes en un segundo y crea códigos QR personalizados de alta calidad sin complicaciones. Todo en un solo lugar, rápido y elegante.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#generador-qr" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-2xl bg-gradient-to-r from-oceanBlue to-sky-500 text-white font-bold text-base shadow-xl shadow-sky-500/25 hover:shadow-sky-500/40 hover:-translate-y-0.5 transition-all">
+                            <i data-lucide="zap" class="w-5 h-5"></i>
+                            Generar Código QR Ahora
+                        </a>
+                        <a href="#beneficios" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-white/85 hover:bg-white text-deepNavy font-bold text-base border border-white shadow-md hover:-translate-y-0.5 transition-all">
+                            Explorar Beneficios
+                            <i data-lucide="arrow-down-right" class="w-5 h-5 text-coralAccent"></i>
+                        </a>
+                    </div>
+
+                    <!-- Métricas rápidas -->
+                    <div class="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-8 text-sm text-slate-600">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-mintAccent"></i>
+                            <span><strong>100%</strong> Gratuito y al instante</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-oceanBlue"></i>
+                            <span>Sin caducidad ni registros</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna derecha: Tarjetas modernas con efecto Glassmorphism -->
+                <div class="lg:col-span-5 relative">
+                    <!-- Tarjeta principal flotante -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 relative z-10 animate-float">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-2xl bg-coralAccent/15 text-coralAccent flex items-center justify-center">
+                                    <i data-lucide="award" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-display font-bold text-deepNavy text-lg">Calidad Garantizada</h3>
+                                    <p class="text-xs text-slate-500">Experiencia de usuario superior</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-mintAccent/15 text-emerald-700 font-bold text-xs">
+                                +99.8% Éxito
+                            </span>
+                        </div>
+
+                        <!-- Mini tarjeta interna -->
+                        <div class="bg-white/90 rounded-2xl p-4 mb-5 border border-sky-100 flex items-center gap-4 shadow-sm">
+                            <div class="w-14 h-14 rounded-xl bg-pastelBlue flex items-center justify-center shrink-0">
+                                <i data-lucide="qr-code" class="w-8 h-8 text-oceanBlue"></i>
+                            </div>
+                            <div>
+                                <p class="font-display font-bold text-sm text-deepNavy">Conexión Directa QR</p>
+                                <p class="text-xs text-slate-500 mt-0.5">Convierte enlaces, menús o WhatsApp en un código listo para escanear.</p>
+                            </div>
+                        </div>
+
+                        <!-- Barra de progreso decorativa -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs font-semibold text-slate-600">
+                                <span>Velocidad de escaneo optimizada</span>
+                                <span class="text-oceanBlue">Instantáneo</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-sky-100 rounded-full overflow-hidden">
+                                <div class="h-full w-11/12 bg-gradient-to-r from-oceanBlue via-mintAccent to-coralAccent rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta secundaria flotante (badge inferior) -->
+                    <div class="glass-card rounded-2xl p-4 mt-4 sm:mt-0 sm:absolute sm:-bottom-6 sm:-left-6 z-20 flex items-center gap-3.5 animate-float-delayed max-w-xs mx-auto">
+                        <div class="w-10 h-10 rounded-xl bg-mintAccent text-white flex items-center justify-center shadow-md shadow-emerald-500/20">
+                            <i data-lucide="smile" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="font-display font-bold text-sm text-deepNavy">Diseño Armónico</p>
+                            <p class="text-xs text-slate-500">Pensado para destacar tu marca</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. SECCIÓN DE SERVICIOS Y BENEFICIOS DESTACADOS -->
+    <section id="beneficios" class="py-16 lg:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-14">
+                <span class="text-xs font-bold uppercase tracking-widest text-coralAccent bg-coralAccent/10 px-3.5 py-1.5 rounded-full">
+                    ¿Por qué elegirnos?
+                </span>
+                <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-deepNavy mt-4">
+                    Soluciones pensadas para hacerte crecer
+                </h2>
+                <p class="text-slate-600 mt-3 text-base sm:text-lg">
+                    Combinamos estética moderna, tecnología accesible y herramientas prácticas para que destaques desde el primer clic.
+                </p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                <!-- Beneficio 1 -->
+                <div class="glass-card rounded-3xl p-7 hover:-translate-y-1.5 transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-2xl bg-oceanBlue/15 text-oceanBlue flex items-center justify-center mb-6 group-hover:bg-oceanBlue group-hover:text-white transition-colors">
+                        <i data-lucide="rocket" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-deepNavy mb-2.5">Rapidez y Simplicidad</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Sin procesos tediosos ni configuraciones complejas. Obtén resultados profesionales en cuestión de segundos desde cualquier dispositivo.
+                    </p>
+                </div>
+
+                <!-- Beneficio 2 -->
+                <div class="glass-card rounded-3xl p-7 hover:-translate-y-1.5 transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-2xl bg-mintAccent/15 text-mintAccent flex items-center justify-center mb-6 group-hover:bg-mintAccent group-hover:text-white transition-colors">
+                        <i data-lucide="smartphone" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-deepNavy mb-2.5">Conexión Móvil Total</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Facilita que tus clientes accedan a tu catálogo, redes sociales o chat de WhatsApp con un simple escaneo de cámara.
+                    </p>
+                </div>
+
+                <!-- Beneficio 3 -->
+                <div class="glass-card rounded-3xl p-7 hover:-translate-y-1.5 transition-all duration-300 group sm:col-span-2 lg:col-span-1">
+                    <div class="w-14 h-14 rounded-2xl bg-coralAccent/15 text-coralAccent flex items-center justify-center mb-6 group-hover:bg-coralAccent group-hover:text-white transition-colors">
+                        <i data-lucide="palette" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-deepNavy mb-2.5">Estética de Alto Impacto</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Cuidamos cada detalle visual para proyectar confianza, modernidad y frescura en cada interacción con tu público.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. SECCIÓN INTERACTIVA: GENERADOR Y VISUALIZADOR DE CÓDIGO QR -->
+    <section id="generador-qr" class="py-16 lg:py-24">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-card rounded-[2rem] p-6 sm:p-10 lg:p-12 shadow-2xl">
+                
+                <!-- Encabezado del Generador -->
+                <div class="text-center max-w-2xl mx-auto mb-10">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-mintAccent/15 text-emerald-700 font-bold text-xs mb-3">
+                        <i data-lucide="scan-line" class="w-4 h-4"></i>
+                        HERRAMIENTA INTERACTIVA EN TIEMPO REAL
+                    </div>
+                    <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-deepNavy">
+                        Crea y Descarga tu Código QR
+                    </h2>
+                    <p class="text-slate-600 mt-2.5 text-base">
+                        Escribe cualquier enlace web, mensaje o número de WhatsApp y observa cómo tu código QR se actualiza al instante.
+                    </p>
+                </div>
+
+                <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                    
+                    <!-- Panel de Control (Izquierda) -->
+                    <div class="lg:col-span-7 space-y-6">
+                        
+                        <!-- Botones de Acceso Rápido / Plantillas -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5">
+                                Atajos rápidos de ejemplo:
+                            </label>
+                            <div class="flex flex-wrap gap-2">
+                                <button type="button" onclick="setPreset('https://tumejoropcion.com')" class="px-3.5 py-2 rounded-xl bg-white hover:bg-sky-50 text-xs font-semibold text-deepNavy border border-sky-100 shadow-sm transition-all flex items-center gap-1.5">
+                                    <i data-lucide="globe" class="w-3.5 h-3.5 text-oceanBlue"></i> Sitio Web
+                                </button>
+                                <button type="button" onclick="setPreset('https://wa.me/51999888777?text=Hola%20Tu%20Mejor%20Opci%C3%B3n!')" class="px-3.5 py-2 rounded-xl bg-white hover:bg-emerald-50 text-xs font-semibold text-deepNavy border border-sky-100 shadow-sm transition-all flex items-center gap-1.5">
+                                    <i data-lucide="message-circle" class="w-3.5 h-3.5 text-mintAccent"></i> WhatsApp Directo
+                                </button>
+                                <button type="button" onclick="setPreset('¡Gracias por elegir Tu Mejor Opción! Aprovecha 15% de descuento con el código: MEJOR15')" class="px-3.5 py-2 rounded-xl bg-white hover:bg-rose-50 text-xs font-semibold text-deepNavy border border-sky-100 shadow-sm transition-all flex items-center gap-1.5">
+                                    <i data-lucide="ticket" class="w-3.5 h-3.5 text-coralAccent"></i> Cupón / Texto
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Input principal -->
+                        <div>
+                            <label for="qr-input" class="block text-sm font-bold text-deepNavy mb-2">
+                                Enlace, texto o número de contacto
+                            </label>
+                            <div class="relative">
+                                <input 
+                                    type="text" 
+                                    id="qr-input" 
+                                    value="https://tumejoropcion.com" 
+                                    placeholder="Ej: https://tusitio.com o +51 999 888 777"
+                                    class="w-full pl-4 pr-12 py-4 rounded-2xl bg-white border-2 border-sky-100 focus:border-oceanBlue focus:ring-4 focus:ring-sky-500/15 outline-none text-deepNavy font-medium transition-all shadow-sm"
+                                >
+                                <button 
+                                    type="button" 
+                                    id="clear-btn"
+                                    title="Limpiar texto"
+                                    class="absolute right-3.5 top-1/2 -translate-y-1/2 p-2 text-slate-400 hover:text-coralAccent transition-colors"
+                                >
+                                    <i data-lucide="x-circle" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                            <p id="qr-helper-text" class="text-xs text-slate-500 mt-2">
+                                El código QR se actualiza automáticamente mientras escribes.
+                            </p>
+                        </div>
+
+                        <!-- Selector de color del QR -->
+                        <div>
+                            <label class="block text-sm font-bold text-deepNavy mb-2.5">
+                                Personaliza el color del código:
+                            </label>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <button type="button" onclick="changeQrColor('#0F172A', this)" class="color-dot active w-9 h-9 rounded-full bg-[#0F172A] ring-2 ring-offset-2 ring-oceanBlue transition-transform hover:scale-110" title="Azul Profundo"></button>
+                                <button type="button" onclick="changeQrColor('#0284C7', this)" class="color-dot w-9 h-9 rounded-full bg-[#0284C7] transition-transform hover:scale-110" title="Azul Océano"></button>
+                                <button type="button" onclick="changeQrColor('#059669', this)" class="color-dot w-9 h-9 rounded-full bg-[#059669] transition-transform hover:scale-110" title="Verde Menta"></button>
+                                <button type="button" onclick="changeQrColor('#E11D48', this)" class="color-dot w-9 h-9 rounded-full bg-[#E11D48] transition-transform hover:scale-110" title="Coral Vibrante"></button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Visualizador y Descarga (Derecha) -->
+                    <div class="lg:col-span-5">
+                        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-sky-100 shadow-xl text-center relative overflow-hidden">
+                            <!-- Etiqueta superior -->
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pastelBlue text-oceanBlue text-xs font-bold mb-5">
+                                <span class="w-2 h-2 rounded-full bg-mintAccent"></span>
+                                Listo para escanear
+                            </div>
+
+                            <!-- Contenedor donde se renderiza el QR -->
+                            <div class="p-4 bg-gradient-to-b from-sky-50/70 to-white rounded-2xl border-2 border-dashed border-sky-200 inline-block mx-auto mb-5">
+                                <div id="qrcode" class="w-[200px] h-[200px] flex items-center justify-center"></div>
+                            </div>
+
+                            <p id="qr-preview-label" class="text-xs font-medium text-slate-500 truncate max-w-[240px] mx-auto mb-6">
+                                https://tumejoropcion.com
+                            </p>
+
+                            <!-- Botones de Acción del QR -->
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <button 
+                                    type="button" 
+                                    id="download-qr-btn"
+                                    class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-gradient-to-r from-mintAccent to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white font-bold text-sm shadow-lg shadow-emerald-500/25 active:scale-95 transition-all"
+                                >
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                    Descargar PNG
+                                </button>
+                                <button 
+                                    type="button" 
+                                    id="copy-text-btn"
+                                    class="inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-2xl bg-pastelBlue hover:bg-sky-200/70 text-deepNavy font-bold text-sm transition-all"
+                                    title="Copiar contenido"
+                                >
+                                    <i data-lucide="copy" class="w-4 h-4 text-oceanBlue"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. SECCIÓN DE CONTACTO RÁPIDO -->
+    <section id="contacto" class="py-14 lg:py-20">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-card rounded-3xl p-8 sm:p-10 grid md:grid-cols-2 gap-8 items-center">
+                <div class="space-y-4">
+                    <span class="inline-block px-3 py-1 rounded-full bg-coralAccent/15 text-coralAccent font-bold text-xs">
+                        HABLEMOS HOY
+                    </span>
+                    <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-deepNavy">
+                        ¿Listo para dar el siguiente paso?
+                    </h2>
+                    <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                        Escríbenos directamente y nuestro equipo te ayudará a implementar la solución ideal para tu proyecto o negocio.
+                    </p>
+                    <div class="space-y-2.5 pt-2 text-sm text-slate-700">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-oceanBlue/10 text-oceanBlue flex items-center justify-center">
+                                <i data-lucide="mail" class="w-4 h-4"></i>
+                            </div>
+                            <span>hola@tumejoropcion.com</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-mintAccent/10 text-mintAccent flex items-center justify-center">
+                                <i data-lucide="phone" class="w-4 h-4"></i>
+                            </div>
+                            <span>+51 999 888 777</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulario Rápido -->
+                <form id="quick-contact-form" class="space-y-4 bg-white/80 p-6 rounded-2xl border border-white shadow-sm">
+                    <div>
+                        <label for="contact-name" class="block text-xs font-bold text-deepNavy mb-1">Tu Nombre</label>
+                        <input type="text" id="contact-name" required placeholder="Ej: Camila Torres" class="w-full px-4 py-3 rounded-xl bg-white border border-sky-100 focus:border-oceanBlue outline-none text-sm">
+                    </div>
+                    <div>
+                        <label for="contact-message" class="block text-xs font-bold text-deepNavy mb-1">¿En qué podemos ayudarte?</label>
+                        <textarea id="contact-message" rows="2" required placeholder="Cuéntanos brevemente tu idea..." class="w-full px-4 py-3 rounded-xl bg-white border border-sky-100 focus:border-oceanBlue outline-none text-sm resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 rounded-xl bg-deepNavy hover:bg-oceanBlue text-white font-bold text-sm transition-colors flex items-center justify-center gap-2 shadow-md">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                        Enviar Mensaje Rápido
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- PIE DE PÁGINA MODERNO -->
+    <footer class="border-t border-white/70 bg-white/40 backdrop-blur-md mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-deepNavy text-white flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    </div>
+                    <span class="font-display font-extrabold text-lg text-deepNavy">
+                        Tu Mejor <span class="text-oceanBlue">Opción</span>
+                    </span>
+                </div>
+
+                <p class="text-sm text-slate-500 text-center">
+                    © <span id="current-year"></span> Tu Mejor Opción. Todos los derechos reservados.
+                </p>
+
+                <div class="flex items-center gap-3">
+                    <a href="#inicio" aria-label="Volver arriba" class="p-2.5 rounded-xl bg-white text-deepNavy hover:text-oceanBlue shadow-sm transition-colors">
+                        <i data-lucide="arrow-up" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notificación Toast Flotante (Sin usar alert) -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-deepNavy text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 text-sm font-medium">
+            <i data-lucide="check-circle" class="w-5 h-5 text-mintAccent"></i>
+            <span id="toast-message">Acción completada</span>
+        </div>
+    </div>
+
+    <!-- SCRIPTS DE INTERACTIVIDAD -->
+    <script>
+        // Inicializar iconos Lucide
+        lucide.createIcons();
+
+        // Establecer año actual en el footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Menú móvil toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Sistema de notificaciones Toast limpio
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.textContent = message;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        // --- LÓGICA DEL GENERADOR DE CÓDIGO QR ---
+        const qrContainer = document.getElementById('qrcode');
+        const qrInput = document.getElementById('qr-input');
+        const qrPreviewLabel = document.getElementById('qr-preview-label');
+        const clearBtn = document.getElementById('clear-btn');
+        const downloadBtn = document.getElementById('download-qr-btn');
+        const copyTextBtn = document.getElementById('copy-text-btn');
+
+        let currentQrColor = '#0F172A';
+        let qrInstance = null;
+
+        // Función para renderizar/actualizar el código QR
+        function generateQRCode(text) {
+            const cleanText = text.trim() || 'https://tumejoropcion.com';
+            qrContainer.innerHTML = ''; // Limpiar QR anterior
+            qrPreviewLabel.textContent = cleanText;
+
+            try {
+                qrInstance = new QRCode(qrContainer, {
+                    text: cleanText,
+                    width: 200,
+                    height: 200,
+                    colorDark: currentQrColor,
+                    colorLight: '#FFFFFF',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            } catch (error) {
+                console.error('Error generando QR:', error);
+            }
+        }
+
+        // Generar QR inicial al cargar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            generateQRCode(qrInput.value);
+        });
+
+        // Actualizar en tiempo real al escribir
+        qrInput.addEventListener('input', (e) => {
+            generateQRCode(e.target.value);
+        });
+
+        // Botón para limpiar el campo de texto
+        clearBtn.addEventListener('click', () => {
+            qrInput.value = '';
+            qrInput.focus();
+            generateQRCode('https://tumejoropcion.com');
+        });
+
+        // Plantillas rápidas
+        window.setPreset = function(value) {
+            qrInput.value = value;
+            generateQRCode(value);
+            showToast('Plantilla aplicada al código QR');
+        };
+
+        // Cambiar color del QR
+        window.changeQrColor = function(hexColor, btnElement) {
+            currentQrColor = hexColor;
+            document.querySelectorAll('.color-dot').forEach(dot => {
+                dot.classList.remove('ring-2', 'ring-offset-2', 'ring-oceanBlue');
+            });
+            btnElement.classList.add('ring-2', 'ring-offset-2', 'ring-oceanBlue');
+            generateQRCode(qrInput.value);
+        };
+
+        // Descargar QR como imagen PNG de alta calidad
+        downloadBtn.addEventListener('click', () => {
+            const canvas = qrContainer.querySelector('canvas');
+            const img = qrContainer.querySelector('img');
+            let dataUrl = '';
+
+            if (canvas) {
+                dataUrl = canvas.toDataURL('image/png');
+            } else if (img && img.src) {
+                dataUrl = img.src;
+            }
+
+            if (dataUrl) {
+                const link = document.createElement('a');
+                link.download = 'tu-mejor-opcion-qr.png';
+                link.href = dataUrl;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast('¡Código QR descargado con éxito!');
+            }
+        });
+
+        // Copiar contenido del input al portapapeles
+        copyTextBtn.addEventListener('click', () => {
+            const textToCopy = qrInput.value.trim() || 'https://tumejoropcion.com';
+            const tempInput = document.createElement('input');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast('Enlace o texto copiado al portapapeles');
+        });
+
+        // Manejo del formulario de contacto rápido
+        document.getElementById('quick-contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('contact-name').value;
+            showToast(`¡Gracias ${name}! Tu mensaje ha sido enviado.`);
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>
